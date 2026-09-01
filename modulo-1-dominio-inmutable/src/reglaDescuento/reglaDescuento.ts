@@ -6,17 +6,18 @@
  * ----------------------------------------------------------------------------
  * Reto: representar funcionalmente las promociones (Porcentaje, Monto Fijo,
  * 2x1) y su validación (Condición_Aplicación) dentro de estructuras congeladas,
- * sin código imperativo (sin for/while con mutación de variables) ni mutación
- * de ningún objeto tras su creación.
+ * sin código imperativo ni mutación. Usa el patrón base de inmutabilidad
+ * definido por David en src/shared/inmutable.ts (crearInmutable + DeepReadonly)
+ * en vez de Object.freeze directo, para que todo el equipo use un único
+ * mecanismo estándar.
  * ============================================================================
  */
+
+import { DeepReadonly, crearInmutable } from '../shared/inmutable';
 
 // ----------------------------------------------------------------------------
 // 1. TIPO DE DINERO SIN PUNTO FLOTANTE
 // ----------------------------------------------------------------------------
-// Se usa bigint para representar CENTAVOS exactos. Nunca number/float, porque
-// el sistema completo (ver Módulo 2 del proyecto) prohíbe imprecisiones de
-// coma flotante en cálculos financieros.
 
 export type Dinero = bigint; // valor en centavos. Ej: $10.50 => 1050n
 
@@ -36,32 +37,38 @@ export const multiplicarDineroPorPorcentaje = (
 // 2. CONTEXTO DE APLICACIÓN
 // ----------------------------------------------------------------------------
 
-export interface ItemCarritoContexto {
-  readonly productoId: string;
-  readonly categoria: string;
-  readonly cantidad: number;
-  readonly precioUnitario: Dinero;
+interface ItemCarritoContextoBase {
+  productoId: string;
+  categoria: string;
+  cantidad: number;
+  precioUnitario: Dinero;
 }
 
-export interface ContextoAplicacion {
-  readonly items: ReadonlyArray<ItemCarritoContexto>;
-  readonly subtotal: Dinero;
-  readonly clienteEsFrecuente: boolean;
+export type ItemCarritoContexto = DeepReadonly<ItemCarritoContextoBase>;
+
+interface ContextoAplicacionBase {
+  items: ItemCarritoContextoBase[];
+  subtotal: Dinero;
+  clienteEsFrecuente: boolean;
 }
+
+export type ContextoAplicacion = DeepReadonly<ContextoAplicacionBase>;
 
 export const crearContextoAplicacion = (
-  items: ReadonlyArray<ItemCarritoContexto>,
+  items: ReadonlyArray<ItemCarritoContextoBase>,
   clienteEsFrecuente: boolean = false
-): Readonly<ContextoAplicacion> =>
-  Object.freeze({
-    items: Object.freeze([...items]),
-    subtotal: items.reduce(
-      (acc, item) =>
-        sumarDinero(acc, item.precioUnitario * BigInt(item.cantidad)),
-      0n
-    ),
+): ContextoAplicacion => {
+  const subtotal = items.reduce(
+    (acc, item) => sumarDinero(acc, item.precioUnitario * BigInt(item.cantidad)),
+    0n
+  );
+
+  return crearInmutable({
+    items: [...items],
+    subtotal,
     clienteEsFrecuente,
   });
+};
 
 // ----------------------------------------------------------------------------
 // 3. CONDICIÓN_APLICACIÓN — función pura de validación
@@ -100,47 +107,52 @@ export const NO = (condicion: CondicionAplicacion): CondicionAplicacion => (
 // 4. REPRESENTACIÓN FUNCIONAL DE LAS PROMOCIONES (Union Discriminada)
 // ----------------------------------------------------------------------------
 
-export interface ReglaPorcentaje {
-  readonly tipo: "PORCENTAJE";
-  readonly valorPorcentaje: number;
-  readonly condicion: CondicionAplicacion;
+interface ReglaPorcentajeBase {
+  tipo: "PORCENTAJE";
+  valorPorcentaje: number;
+  condicion: CondicionAplicacion;
 }
 
-export interface ReglaMontoFijo {
-  readonly tipo: "MONTO_FIJO";
-  readonly valorDescuento: Dinero;
-  readonly condicion: CondicionAplicacion;
+interface ReglaMontoFijoBase {
+  tipo: "MONTO_FIJO";
+  valorDescuento: Dinero;
+  condicion: CondicionAplicacion;
 }
 
-export interface Regla2x1 {
-  readonly tipo: "DOS_POR_UNO";
-  readonly categoriaAplicable: string;
-  readonly condicion: CondicionAplicacion;
+interface Regla2x1Base {
+  tipo: "DOS_POR_UNO";
+  categoriaAplicable: string;
+  condicion: CondicionAplicacion;
 }
+
+export type ReglaPorcentaje = DeepReadonly<ReglaPorcentajeBase>;
+export type ReglaMontoFijo = DeepReadonly<ReglaMontoFijoBase>;
+export type Regla2x1 = DeepReadonly<Regla2x1Base>;
 
 export type ReglaDescuento = ReglaPorcentaje | ReglaMontoFijo | Regla2x1;
 
 // ----------------------------------------------------------------------------
-// 5. FÁBRICAS (constructores puros que retornan objetos congelados)
+// 5. FÁBRICAS (constructores puros que retornan objetos congelados
+//    usando el patrón base crearInmutable de David)
 // ----------------------------------------------------------------------------
 
 export const crearReglaPorcentaje = (
   valorPorcentaje: number,
   condicion: CondicionAplicacion
-): Readonly<ReglaPorcentaje> =>
-  Object.freeze({ tipo: "PORCENTAJE", valorPorcentaje, condicion });
+): ReglaPorcentaje =>
+  crearInmutable({ tipo: "PORCENTAJE", valorPorcentaje, condicion });
 
 export const crearReglaMontoFijo = (
   valorDescuento: Dinero,
   condicion: CondicionAplicacion
-): Readonly<ReglaMontoFijo> =>
-  Object.freeze({ tipo: "MONTO_FIJO", valorDescuento, condicion });
+): ReglaMontoFijo =>
+  crearInmutable({ tipo: "MONTO_FIJO", valorDescuento, condicion });
 
 export const crearRegla2x1 = (
   categoriaAplicable: string,
   condicion: CondicionAplicacion
-): Readonly<Regla2x1> =>
-  Object.freeze({ tipo: "DOS_POR_UNO", categoriaAplicable, condicion });
+): Regla2x1 =>
+  crearInmutable({ tipo: "DOS_POR_UNO", categoriaAplicable, condicion });
 
 // ----------------------------------------------------------------------------
 // 6. VALIDACIÓN: ¿la regla aplica en este contexto?
@@ -182,8 +194,7 @@ export const calcularDescuento = (
 
       return itemsCategoria.reduce((totalDescuento, item) => {
         const paresGratis = Math.floor(item.cantidad / 2);
-        const descuentoItem =
-          item.precioUnitario * BigInt(paresGratis);
+        const descuentoItem = item.precioUnitario * BigInt(paresGratis);
         return sumarDinero(totalDescuento, descuentoItem);
       }, 0n);
     }
