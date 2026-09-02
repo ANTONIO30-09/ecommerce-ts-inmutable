@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap');
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #FAF3E7;
+    --foreground: #2C3E50;
+    --card: #FFFFFF;
+    --card-foreground: #2C3E50;
+    --popover: #FFFFFF;
+    --popover-foreground: #2C3E50;
+    --primary: #D97A2B;
+    --primary-foreground: #FFFFFF;
+    --secondary: #2E8B57;
+    --secondary-foreground: #FFFFFF;
+    --muted: #F3E9DA;
+    --muted-foreground: #6B7280;
+    --accent: #C0392B;
+    --accent-foreground: #FFFFFF;
+    --destructive: #C0392B;
+    --border: #E5D7C1;
+    --input: #E5D7C1;
+    --ring: #D97A2B;
+    --radius: 0.625rem;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-display: 'Nunito', 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
