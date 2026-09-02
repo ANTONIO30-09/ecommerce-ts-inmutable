@@ -103,7 +103,7 @@ múltiples usuarios compran el mismo producto en simultáneo.
 todos los eventos pasados de ese producto.
 
 **Tipos de eventos:** `StockIngresado`, `StockReservadoEnCarrito`,
-`StockVendido`, `StockDevuelto`.
+`StockReservaLiberada`, `StockVendido`, `StockDevuelto`.
 
 ---
 
@@ -125,8 +125,8 @@ ecommerce-ts-inmutable/
 | 1 — Dominio Inmutable | Antonio Vicente Garcia Corrales | Completo |
 | 2 — Motor de Precios | Kevin Peña Jamachi | Completo |
 | 3 — Facturación | Cristhian Alejandro Vargas Zambrana | Completo |
-| 4 — Búsqueda | Juan Pablo Villca Revollo | En progreso |
-| 5 — Inventario | Joshua Jhoel Chuquimia Amusquivar | En progreso |
+| 4 — Búsqueda | Juan Pablo Villca Revollo | Completo |
+| 5 — Inventario | Joshua Jhoel Chuquimia Amusquivar | Completo |
 
 > Cada módulo mantiene su propia tabla de rastreabilidad detallada (por
 > colaborador y archivo) en el `README.md` dentro de su propia carpeta.
