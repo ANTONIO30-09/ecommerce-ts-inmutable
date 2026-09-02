@@ -45,6 +45,9 @@ Ninguna operación altera los objetos existentes.
 ## Módulo 2: Motor de Precios, Cupones y Reglas Comerciales
 
 **Jefe:** Kevin Peña Jamachi
+**Integrantes:**
+- Allen Jhonatan Requena Heredia
+- Cesar Gabriel Flores Coca
 
 Tubería (pipeline) que toma un Carrito y aplica reglas de negocio de forma
 secuencial sin mutar los datos originales. Cada paso del pipeline recibe un
@@ -56,6 +59,10 @@ total final).
 ## Módulo 3: Motor de Facturación, Prorrateo y Devoluciones
 
 **Jefe:** Cristhian Alejandro Vargas Zambrana
+**Integrantes:**
+- Jose Gabriel Parraga Alvarez
+- Franco Guerra Roca
+- Misael Patrick Ramos Torrez
 
 Maneja la generación de comprobantes fiscales y los cálculos financieros
 proporcionales cuando hay modificaciones posteriores a la venta.
@@ -115,11 +122,11 @@ ecommerce-ts-inmutable/
 
 | Módulo | Jefe | Estado |
 |---|---|---|
-| 1 — Dominio Inmutable | Antonio Vicente Garcia Corrales | En progreso |
-| 2 — Motor de Precios | Kevin Peña Jamachi | Sin empezar |
-| 3 — Facturación | Cristhian Alejandro Vargas Zambrana | Sin empezar |
-| 4 — Búsqueda | Juan Pablo Villca Revollo | Sin empezar |
-| 5 — Inventario | Joshua Jhoel Chuquimia Amusquivar | Sin empezar |
+| 1 — Dominio Inmutable | Antonio Vicente Garcia Corrales | Completo |
+| 2 — Motor de Precios | Kevin Peña Jamachi | Completo |
+| 3 — Facturación | Cristhian Alejandro Vargas Zambrana | Completo |
+| 4 — Búsqueda | Juan Pablo Villca Revollo | En progreso |
+| 5 — Inventario | Joshua Jhoel Chuquimia Amusquivar | En progreso |
 
 > Cada módulo mantiene su propia tabla de rastreabilidad detallada (por
 > colaborador y archivo) en el `README.md` dentro de su propia carpeta.
