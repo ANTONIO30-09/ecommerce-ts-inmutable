@@ -14,11 +14,13 @@ export class StockService {
     const estadoActual = calcularStockActual(productoId, eventosProducto);
 
     if (estadoActual.stockDisponible < cantidad) {
-      throw new Error(Stock insuficiente para el producto ${productoId}. Disponible: ${estadoActual.stockDisponible});
+      throw new Error(
+        `Stock insuficiente para el producto ${productoId}. Disponible: ${estadoActual.stockDisponible}`
+      );
     }
 
     const eventoReserva: StockReservadoEnCarrito = Object.freeze({
-      id: evt-${Date.now()},
+      id: `evt-${Date.now()}`,
       productoId,
       cantidad,
       carritoId,

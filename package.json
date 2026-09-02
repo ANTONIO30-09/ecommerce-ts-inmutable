@@ -19,6 +19,9 @@
   },
   "homepage": "https://github.com/ANTONIO30-09/ecommerce-ts-inmutable#readme",
   "devDependencies": {
+    "@types/node": "^26.4.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   }
 }
