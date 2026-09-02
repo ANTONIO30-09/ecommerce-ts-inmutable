@@ -141,3 +141,62 @@ carpeta de módulo/entidad, sigue la convención de commits
 ## Stack técnico
 
 TypeScript, sin librerías de mutación de estado.
+
+---
+
+## Arquitectura y Roles del Proyecto
+
+### Capa de Dominio (Lógica de Negocio) — Trabajo de los 5 equipos
+Los 5 módulos fueron implementados como funciones puras e inmutables por los
+20 integrantes del curso, cada equipo responsable de su módulo asignado.
+
+### Capa de Integración (Base de Datos, API y Frontend) — Antonio Vicente Garcia Corrales
+Además de liderar el Módulo 1, Antonio diseñó e implementó la arquitectura
+completa que conecta los 5 módulos en un sistema funcional real:
+- Base de datos SQLite con esquema insert-only.
+- Backend/API en Express que integra las funciones puras de los 5 módulos.
+- Frontend en React para la tienda "La Esquina".
+
+Esta capa fue un trabajo adicional, independiente de la responsabilidad de
+cada equipo sobre su módulo de dominio.
+
+## Cómo ejecutar el proyecto
+
+### Requisitos
+
+- Node.js 20 o superior.
+- npm 10 o superior.
+
+### Instalación
+
+git clone https://github.com/ANTONIO30-09/ecommerce-ts-inmutable.git
+cd ecommerce-ts-inmutable
+cd backend
+npm install
+npm run seed
+cd ../frontend
+npm install
+
+### Ejecutar en desarrollo
+
+En una terminal:
+
+cd backend
+npm run dev
+
+En otra terminal:
+
+cd frontend
+npm run dev
+
+Backend: http://localhost:4000
+Frontend: http://localhost:5173
+
+## Limitaciones conocidas
+
+1. Concurrencia en versionado de carritos: dos peticiones simultáneas
+   podrían leer la misma última versión e intentar insertar la misma versión
+   siguiente. No hay control de concurrencia implementado; se asume un uso
+   secuencial académico.
+2. Serialización de bigint a JSON: los importes se convierten a Number
+   en las respuestas HTTP para cumplir con el estándar JSON.
