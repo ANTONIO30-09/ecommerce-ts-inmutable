@@ -1,6 +1,7 @@
 export type TipoEventoStock = 
   | 'StockIngresado' 
-  | 'StockReservadoEnCarrito' 
+  | 'StockReservadoEnCarrito'
+  | 'StockReservaLiberada'
   | 'StockVendido' 
   | 'StockDevuelto';
 
@@ -21,6 +22,12 @@ export interface StockReservadoEnCarrito extends EventoStockBase {
   readonly carritoId: string;
 }
 
+export interface StockReservaLiberada extends EventoStockBase {
+  readonly tipo: 'StockReservaLiberada';
+  readonly carritoId: string;
+  readonly motivo?: string;
+}
+
 export interface StockVendido extends EventoStockBase {
   readonly tipo: 'StockVendido';
   readonly facturaId: string;
@@ -33,6 +40,7 @@ export interface StockDevuelto extends EventoStockBase {
 
 export type EventoStock = 
   | StockIngresado 
-  | StockReservadoEnCarrito 
+  | StockReservadoEnCarrito
+  | StockReservaLiberada
   | StockVendido 
   | StockDevuelto;
